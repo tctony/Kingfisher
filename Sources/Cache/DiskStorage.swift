@@ -317,7 +317,8 @@ public enum DiskStorage {
                 if let ext = config.pathExtension {
                     return "\(hashedKey).\(ext)"
                 } else if config.autoExtAfterHashedFileName,
-                          let ext = key.kf.ext {
+                          let ext = key.kf.ext,
+                          (config.autoExtList == nil || config.autoExtList!.contains(ext)) {
                     return "\(hashedKey).\(ext)"
                 }
                 return hashedKey
@@ -454,6 +455,9 @@ extension DiskStorage {
         /// Default is `false`
         /// if set to `true`, image extension will be extracted from original file name and append to hasedFileName
         public var autoExtAfterHashedFileName = false
+        /// only auto extract ext in this list
+        /// extract all ext if it it nil
+        public var autoExtList: [String]? = [ "jpg", "jpeg", "gif", "webp" ]
 
         let name: String
         let fileManager: FileManager

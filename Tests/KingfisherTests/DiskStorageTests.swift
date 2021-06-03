@@ -200,10 +200,20 @@ class DiskStorageTests: XCTestCase {
         // hashed fileName
         storage.config.usesHashedFileName = true
         storage.config.autoExtAfterHashedFileName = true
+
         let hashedFileName = storage.cacheFileName(forKey: key)
         XCTAssertNotEqual(hashedFileName, key)
         // validation md5 hash of the key
         XCTAssertEqual(hashedFileName, key.kf.md5 + ".gif")
+
+        // unknown ext
+        let hashedFileNameWithOutExt = storage.cacheFileName(forKey: "test.unknownext")
+        XCTAssertEqual(hashedFileNameWithOutExt, "test.unknownext".kf.md5)
+
+        // auto ext list is nil
+        storage.config.autoExtList = nil
+        let hashedFileNameWithUnknownExt = storage.cacheFileName(forKey: "test.unknownext")
+        XCTAssertEqual(hashedFileNameWithUnknownExt, "test.unknownext".kf.md5 + ".unknownext")
 
         // fileName without hash
         storage.config.usesHashedFileName = false
